@@ -1,0 +1,9 @@
+1.Check the different type of categories present in the menu.
+
+2.Checking whether there are menuitems present in the categories or not.
+
+3.Checking whether there are sub-categories in the categories or not.
+
+4.Checking whether there are menuitems in the sub-categories or not.
+
+5.Printing overview of all the menuitems in the restuarent.
