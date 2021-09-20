@@ -1,0 +1,9 @@
+1. Print the top director with maximum number of movies.
+
+2. Print the popular genere watched by most of the audiance.
+
+3. Print out the top ten movies, according to imdb score.
+
+4. Print the least watched movie based on their imdb score.
+
+5. Print the best director in the first hundred movies.
