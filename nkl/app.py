@@ -8,24 +8,36 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def welcome():
-    return jsonify({"Message": "Hello Python Guru"})
+    return jsonify({"message": "Hello Python Guru"})
 
-@app.route('/<eid>', methods=['GET'])
+@app.route('/<int:eid>', methods=['GET'])
 def query_records(eid):
-    logger.debug(f"----[{eid}] ----")
+
+    response = {"status": "failed",
+                "data": 'error: record not found'}
+
     with open('data.json') as f:
         data = f.read()
         records = json.loads(data)
-        for record in records:
-            if record['eid'] == int(eid):
-                return jsonify(record)
-        return jsonify({'error': 'data not found'})
+
+    for record in records:
+        if record['eid'] == eid:
+            response["status"] = "success"
+            response["data"] = record
+            break
+    logger.info("#########################3")
+    logger.debug(response)
+    logger.info("#########################3")
+    return jsonify(response)
 
 
 @app.route('/', methods=['PUT'])
 def create_record():
-    record = json.loads(request.data)
-    logger.debug(record)
+    try:
+        record = json.loads(request.data)
+    except Exception as ex:
+        return jsonify({"status": "failed", "data": "error:" + str(ex)})
+    
     records = None
     
     if os.path.exists('data.json'):
@@ -43,13 +55,14 @@ def create_record():
 
     with open('data.json', 'w') as f:
         f.write(json.dumps(records, indent=2))
-    return jsonify({'status': "Record has been created!"})
+    return jsonify({"status": "success", "data": "message: Record has been created!"})
 
 
 @app.route('/', methods=['POST'])
 def update_record():
     record = json.loads(request.data)
     new_records = []
+    response = {'status': "failed", "data": "error: Record not found!"}
     with open('data.json') as f:
         data = f.read()
         records = json.loads(data)
@@ -60,29 +73,35 @@ def update_record():
             r['salary'] = record['salary']
             r['full_time'] = record['full_time']
             r['age'] = record['age']
+            response = {'status': "success", "data": "message: Record has been updated!"}
             break
 
     with open('data.json', 'w') as f:
         f.write(json.dumps(records, indent=2))
 
-    return jsonify({'status': "Record has been updated!"})
+    return jsonify(response)
     
 @app.route('/<int:eid>', methods=['DELETE'])
 def delete_record(eid):
     new_records = []
+    reponse = {"status": "failed",
+               "data": 'error: record not found'}
     with open('data.json') as f:
         data = f.read()
         records = json.loads(data)
 
-        for idx, r in enumerate(records):
-            if r['eid'] == eid:
-                break
+    for idx, r in enumerate(records):
+        if r['eid'] == eid:
+            reponse = {"status": "success",
+                        "data": "message: record has been deleted!"}
+            records.pop(idx)
 
-        records.pop(idx)
+            with open('data.json', 'w') as f:
+                f.write(json.dumps(records, indent=2))
+            break
 
-    with open('data.json', 'w') as f:
-        f.write(json.dumps(records, indent=2))
-    return jsonify({'status': "Record has been deleted!"})
+        
+    return jsonify(reponse)
 
 if __name__ == '__main__':
     app.run(debug=True)
