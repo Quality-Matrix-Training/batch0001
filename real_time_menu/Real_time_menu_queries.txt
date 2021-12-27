@@ -1,0 +1,11 @@
+Q1) Print all names of the categories in the menu ?
+
+Q2) Check whether menu-items present or not in the categories ?
+
+Q3) Check whether the sub-categories present or not in the menu ?
+
+Q4) Print all the categories and their respective items in the menu ?
+
+Q5) Print all the sub-categories and their respective items in the menu ?
+
+Q6) Give an overview of the menu, like categories, sub-categories, and items present in it ?
